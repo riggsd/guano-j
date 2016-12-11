@@ -24,30 +24,31 @@ public class WaveReader {
     }
 
     public WaveReader(FileInputStream fis) throws IOException {
-        WaveDataInputStream dis = new WaveDataInputStream(fis);
+        try (WaveDataInputStream dis = new WaveDataInputStream(fis)) {
 
-        // RIFF
-        String id = dis.readString(4);
-        int size = dis.readWavInt();
-        //System.out.println(String.format("%s %d (%.1fmb)", id, size, (float)size/1024/1024));
-        if (!id.equals("RIFF")) throw new IOException("RIFF chunk identifier not found");
+            // RIFF
+            String id = dis.readString(4);
+            int size = dis.readWavInt();
+            //System.out.println(String.format("%s %d (%.1fmb)", id, size, (float)size/1024/1024));
+            if (!id.equals("RIFF")) throw new IOException("RIFF chunk identifier not found");
 
-        // WAVE
-        id = dis.readString(4);
-        //System.out.println(id);
-        if (!id.equals("WAVE")) throw new IOException("WAVE RIFF type identifier not found");
+            // WAVE
+            id = dis.readString(4);
+            //System.out.println(id);
+            if (!id.equals("WAVE")) throw new IOException("WAVE RIFF type identifier not found");
 
-        // individual subchunks...
-        WaveDataInputStream.Chunk chunk;
-        while (true) {
-            try {
-                chunk = dis.readChunk();
-            } catch (EOFException e) {
-                break;
+            // individual subchunks...
+            WaveDataInputStream.Chunk chunk;
+            while (true) {
+                try {
+                    chunk = dis.readChunk();
+                } catch (EOFException e) {
+                    break;
+                }
+                //System.out.println(chunk);
+                chunkNames.add(chunk.id);
+                chunks.put(chunk.id, chunk.data);
             }
-            //System.out.println(chunk);
-            chunkNames.add(chunk.id);
-            chunks.put(chunk.id, chunk.data);
         }
     }
 

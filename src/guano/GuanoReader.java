@@ -46,36 +46,35 @@ public class GuanoReader {
      * @throws IOException
      */
     public GuanoReader(FileInputStream fis) throws IOException {
-        try {
-            WaveReader reader = new WaveReader(fis);
-            if (reader.hasChunk(GUANO_CHUNK_ID)) {
-                String data = new String(reader.getChunk(GUANO_CHUNK_ID));
-                BufferedReader br = new BufferedReader(new StringReader(data));
-                String line;
-                while ((line = br.readLine()) != null) {
-                    if (line.trim().isEmpty()) continue;
-
-                    String[] toks = line.split(":", 2);
-                    String ns = "";
-                    String field = toks[0];
-                    String val = toks[1];
-                    if (field.contains("|")) {
-                        toks = field.split("\\|", 2);
-                        ns = toks[0];
-                        field = toks[1];
-                    }
-                    insert(ns, field, val);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        WaveReader reader = new WaveReader(fis);
+        if (reader.hasChunk(GUANO_CHUNK_ID)) {
+            String data = new String(reader.getChunk(GUANO_CHUNK_ID), "UTF-8");
+            parse(data);
         }
-
     }
 
-    private void insert(String ns, String field, String val) {
-        // Populate our stateful data structures as we parse the underlying file
+    /** Parse the bulk GUANO metadata structure */
+    private void parse(String data) throws IOException {
+        BufferedReader br = new BufferedReader(new StringReader(data));
+        String line;
+        while ((line = br.readLine()) != null) {
+            if (line.trim().isEmpty()) continue;
 
+            String[] toks = line.split(":", 2);
+            String ns = "";
+            String field = toks[0];
+            String val = toks[1];
+            if (field.contains("|")) {
+                toks = field.split("\\|", 2);
+                ns = toks[0];
+                field = toks[1];
+            }
+            insert(ns, field, val);
+        }
+    }
+
+    /** Populate our stateful data structures as we parse the underlying file */
+    private void insert(String ns, String field, String val) {
         ns = ns.trim(); field = field.trim(); val = val.trim();
         //System.out.println(String.format("%s\t%s\t%s", ns, field, val));
 
