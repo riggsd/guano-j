@@ -28,13 +28,19 @@ try {
         }
 
     // get the value for a top-level field
-    reader.get("Species Auto ID")
+    reader.getString("Species Auto ID");
 
     // get the value (cast to appropriate data type) of a field underneath a namespace
-    reader.getFloat("GUANO", "Version")
+    reader.getFloat("GUANO", "Version");
 
     // another way to reference a namespaced field
-    reader.getInt("SB|Avg Duration")
+    reader.getInt("SB|Avg Duration");
+
+    // all defined top-level fields are also available as Enums
+    reader.getString(GuanoField.SPECIES_MANUAL_ID);
+    for (GuanoField field : GuanoField.values()) {
+        reader.getString(field);
+    }
 
 catch (IOException e) {
     e.printStackTrace();
