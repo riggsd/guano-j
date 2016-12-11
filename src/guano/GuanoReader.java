@@ -32,7 +32,7 @@ public class GuanoReader {
                 String data = new String(reader.getChunk(GUANO_CHUNK_ID));
                 BufferedReader br = new BufferedReader(new StringReader(data));
                 String line;
-                while ((line = br.readLine()) != null) {  // FIXME: this will fail for fields with multi-line values
+                while ((line = br.readLine()) != null) {
                     if (line.trim().isEmpty()) continue;
 
                     String[] toks = line.split(":", 2);
@@ -60,12 +60,12 @@ public class GuanoReader {
         namespaceNames.add(ns);
 
         if (!namespaceFieldNames.containsKey(ns)) {
-            namespaceFieldNames.put(ns, new HashSet<>());
+            namespaceFieldNames.put(ns, new HashSet<String>());
         }
         namespaceFieldNames.get(ns).add(field);
 
         if (!namespaceFields.containsKey(ns)) {
-            namespaceFields.put(ns, new HashMap<>());
+            namespaceFields.put(ns, new HashMap<String, String>());
         }
         namespaceFields.get(ns).put(field, val);
     }
@@ -121,8 +121,14 @@ public class GuanoReader {
 
         try {
             GuanoReader reader = new GuanoReader(args[0]);
-            System.out.println(reader.getNamespaces());
-            System.out.println(reader.getFieldnames(""));
+            for (String ns : reader.getNamespaces()) {
+                System.out.println(ns);
+                Map<String, String> fields = reader.getFields(ns);
+                for (Map.Entry<String, String> field : fields.entrySet()) {
+                    System.out.println(String.format("\t%s:\t%s", field.getKey(), field.getValue()));
+                }
+                System.out.println();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
