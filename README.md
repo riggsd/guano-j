@@ -93,3 +93,9 @@ This project is source compatible with Java 7+.
     $> java -jar dist/guano*.jar guano.GuanoReader test.wav  # or include the .jar in your own project
 
 But seriously, don't use this code yet!
+
+
+License
+=======
+
+This code is Free Software licensed under the [MIT License](LICENSE).
