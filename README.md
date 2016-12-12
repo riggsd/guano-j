@@ -9,6 +9,8 @@ Don't use this code yet!
 Example Usage
 =============
 
+Reading metadata from an existing file:
+
 ```java
 import guano.GuanoReader
 
@@ -43,6 +45,37 @@ try {
     }
 
 catch (IOException e) {
+    e.printStackTrace();
+}
+```
+
+Writing to a new .WAV file:
+
+```java
+try {
+
+    // create a GUANO Writer instance
+    GuanoWaveWriter writer = new GuanoWaveWriter("guano_out.wav");
+
+    // here we create some fake audio data
+    int sampleRate = 250_000;
+    int lengthSeconds = 3;
+    short[] audioData = new short[sampleRate * lengthSeconds];  // pretend this is real audio data
+    writer.setAudioData(sampleRate, audioData);
+
+    // populate the metadata fields
+    writer.setString(GuanoField.TIMESTAMP, OffsetDateTime.now().toString());  // `Timestamp` is required!
+    writer.setFloat(GuanoField.LENGTH, lengthSeconds);
+    writer.setString(GuanoField.MAKE, "Myotisoft");
+    writer.setString(GuanoField.SPECIES_MANUAL_ID, "NOISE");
+    writer.setString(GuanoField.NOTE, "This is a fake recording from our GUANO Writer test.\\nA new Line!\\nAnd another.");
+    writer.setInt("MSFT", "Fnord", 42);
+
+    // validate it and dump it to a file
+    writer.validate();
+    writer.write();
+
+} catch (IOException e) {
     e.printStackTrace();
 }
 ```
