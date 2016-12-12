@@ -12,7 +12,7 @@ Example Usage
 Reading metadata from an existing file:
 
 ```java
-import guano.GuanoReader
+import guano.GuanoReader;
 
 try {
 
@@ -52,6 +52,8 @@ catch (IOException e) {
 Writing to a new .WAV file:
 
 ```java
+import guano.GuanoWaveWriter;
+
 try {
 
     // create a GUANO Writer instance
