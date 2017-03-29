@@ -1,9 +1,9 @@
 guano-j
 -------
 
-Java reference implementation of the [GUANO metadata specification](https://github.com/riggsd/guano-py/blob/master/doc/guano_specification.md).
+Java reference implementation of the [GUANO metadata specification](http://guano-md.org).
 
-Don't use this code yet!
+Please consider this code "example quality" at this point!
 
 
 Example Usage
